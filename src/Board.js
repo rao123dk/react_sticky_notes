@@ -7,10 +7,7 @@ class Board extends Component{
         super(props)
         this.state ={
             notes :[
-                {
-                    'id' : 0,
-                    'note' : 'Meetings at 4PM'
-                }
+
             ]
         }
         this.eachNote = this.eachNote.bind(this);
@@ -18,6 +15,17 @@ class Board extends Component{
         this.removeNote = this.removeNote.bind(this);
         this.addNote = this.addNote.bind(this);
         this.nextId = this.nextId.bind(this);
+        this.todayDate = this.todayDate.bind(this);
+    }
+
+    componentDidUpdate(){
+        var self = this;
+        if(this.props.count){
+
+        }
+    }
+    componentWillMount(){
+        //getting data from local storage
     }
     addNote(text){
        // var new_text_obj = { 'id' : this.state.notes.length+1, 'note' : text }
@@ -26,15 +34,20 @@ class Board extends Component{
             notes : [
                 ...prevState.notes, {
                     'id' : this.nextId(),
-                    'note' : text
+                    'note' : text,
+                    'date' : this.todayDate()
                 }
             ]
         }))
     }
 
     nextId(){
-        this.uiqueId = this.uiqueId || 0;
+        this.uiqueId = this.uiqueId || 1;
         return this.uiqueId++;
+    }
+    todayDate(){
+        var d = new Date();
+        return d.getDate() + '/' + d.getMonth()+1 + '/' + d.getFullYear();
     }
     updateNote(newText, i){
         console.log('updating',i, newText);
@@ -56,7 +69,13 @@ class Board extends Component{
 
     eachNote(note, i){
         return(
-            <Note onChange={this.updateNote} onRemove={this.removeNote} key={i} index={i}> {note.note}</Note>
+            <Note onChange={this.updateNote}
+                    onRemove={this.removeNote}
+                    key={note.id}
+                    index={note.id}>
+                    {note.note}
+                <span> {note.date}</span>
+            </Note>
         )
     }
     render(){
